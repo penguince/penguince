@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Lab 4</title>
+        <script>
+            var name, item, number;
+            now = new Date();
+            hour = now.getHours();
+
+            name = window.prompt("Please Enter Your Name");
+            if(hour < 12){
+                document.write("<h1> Good Morning")
+            } else if (hour < 18){
+                document.write("<h1> Good Afternoon ")
+            } else {
+                document.write("<h1> Good Evening ")
+            }
+            document.writeln(" ", name + ", Welcome to my store")
+        
+        </script>
+        </head>
+    <body>
+        
+    </body>
+</html>
