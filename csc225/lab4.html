@@ -1,22 +1,41 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Lab 4</title>
         <script>
+
+
+            alert("Welcome to my Store");
+
             var name, item, number;
             now = new Date();
             hour = now.getHours();
 
             name = window.prompt("Please Enter Your Name");
-            if(hour < 12){
-                document.write("<h1> Good Morning")
-            } else if (hour < 18){
-                document.write("<h1> Good Afternoon ")
-            } else {
-                document.write("<h1> Good Evening ")
+            item = window.prompt("Pleanse Enter the Name of the Item");
+            
+            number = parseInt(window.prompt("Please Enter Number of Items (1-99)"));
+
+            while (number > 99 || number < 1){
+              number =  parseInt(window.prompt("Exceed Please Type within the range (1-99)"));
             }
-            document.writeln(" ", name + ", Welcome to my store")
-        
+
+            if(hour < 12){
+                document.write("<h1> Good Morning");
+            } else if (hour < 18){
+                document.write("<h1> Good Afternoon ");
+            } else {
+                document.write("<h1> Good Evening ");
+            }
+            document.writeln(" ", name + ", Thank You for Ordering");
+            document.write("<h2>You ordered " + number + " " + item + ".</h2>");
+            
+            // 7 days
+            arrDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);  
+
+            document.write("<h3>The expected time of arrival is " + arrDate + " </h3>" )
         </script>
         </head>
     <body>
