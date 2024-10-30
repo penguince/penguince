@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 6 API</title>
+</head>
+<body>
+    <button onclick="fetchCat()">Button</button>
+
+    <table border="1" id="factsTable">
+        <tr>
+            <th>factID</th>
+            <th>fact</th>
+        </tr>
+    </table>
+    
+    <img id = "me" src = "imgforsite.png">
+    <script>
+        async function fetchCat() {
+            
+            const url = "https://brianobruno.github.io/cats.json";
+            const options = {
+                method: "GET"
+            };
+
+            const response = await fetch(url, options);
+            const result = await response.text();
+            const myObj = JSON.parse(result);
+
+            const sorted = myObj.facts.sort((a, b) => a.factId - b.factId);
+            document.getElementById("me").src = myObj.catPhoto;
+
+
+            const table = document.getElementById("factsTable");
+            table.innerHTML = "<tr><th>factID</th><th>fact</th></tr>";
+            
+            sorted.forEach(function(fact) {
+                const row = table.insertRow();
+                row.insertCell().textContent = fact.factId;
+                row.insertCell().textContent = fact.text;
+
+            });
+          
+        }
+    </script>
+</body>
+</html>
