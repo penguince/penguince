@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>DigiDex</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">DigiDex</a>
+    </nav>
+    <div class="jumbotron text-center bg-light py-5">
+        <h1 class="display-4">DigiDex</h1>
+        <p class="lead">Explore the DigiWorld to find your favorite Digimon!</p>
+    </div>
+
+    <div class="container text-center mb-4" id="levelButtons">
+      
+    </div>
+
+   
+    <div class="container">
+        <div class="d-flex justify-content-end mb-4">
+            <div class="input-group w-50">
+                <input type="text" id="search" class="form-control" placeholder="Search Digimon by Name">
+                <button class="btn btn-primary" onclick="searchDigimon()">Search</button>
+            </div>
+        </div>
+        <div id="digimonList" class="row g-3"></div>
+        
+    </div>
+    
+    <script>
+        const baseURL = "https://digimon-api.vercel.app/api/digimon";
+        let digimonList = [];
+        let levels = new Set();
+
+        async function fetchDigimon() {
+            const options = { 
+                method: "GET" 
+            };
+
+            try {
+                const response = await fetch(baseURL, options); 
+                const result = await response.text();
+                const digimonArray = JSON.parse(result); 
+                digimonList = digimonArray; 
+                displayDigimon(digimonArray); 
+                extractLevels(digimonArray); 
+            } catch (error) {
+                console.error("Error fetching Digimon:", error);
+            }
+        }
+
+        function extractLevels(digimonList) {
+            levels = new Set();
+            for (let i = 0; i < digimonList.length; i++) {
+                const digimon = digimonList[i];
+                levels.add(digimon.level);
+            }
+
+            const sortedLevels = Array.from(levels).sort();
+            displayLevelButtons(sortedLevels);
+        }
+
+        function displayLevelButtons(levelArray) {
+            const container = document.getElementById("levelButtons");
+            container.innerHTML = "";
+
+            for (let i = 0; i < levelArray.length; i++) {
+                const level = levelArray[i];
+                const button = document.createElement("a");
+                button.href = `level.html?level=${level}`;
+                button.className = "btn btn-outline-primary m-1";
+                button.textContent = level;
+
+                container.appendChild(button);
+            }
+        }
+
+        function searchDigimon() {
+            const query = document.getElementById("search").value.trim().toLowerCase();
+            const results = [];
+
+            for (let i = 0; i < digimonList.length; i++) {
+                const digimonName = digimonList[i].name.toLowerCase();
+                if (digimonName.includes(query)) {
+                    results.push(digimonList[i]);
+                }
+            }
+
+            if (results.length > 0) {
+                displayDigimon(results);
+            } else {
+                alert("No Digimon found!");
+            }
+        }
+
+        function displayDigimon(digimonArray) {
+            const container = document.getElementById("digimonList");
+            container.innerHTML = "";
+
+            for (let i = 0; i < digimonArray.length; i++) {
+                const digimon = digimonArray[i];
+
+                const card = `
+                    <div class="col-md-4 col-lg-3">
+                        <div class="card h-100 text-center shadow-sm">
+                            <img src="${digimon.img}" class="card-img-top img-fluid" alt="${digimon.name}">
+                            <div class="card-body">
+                                <h5 class="card-title">${digimon.name}</h5>
+                                <p class="card-text">Level: ${digimon.level}</p>
+                                <a href="details.html?name=${digimon.name}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>`;
+
+                container.innerHTML += card;
+            }
+        }
+
+        fetchDigimon();
+    </script>
+</body>
+</html>
